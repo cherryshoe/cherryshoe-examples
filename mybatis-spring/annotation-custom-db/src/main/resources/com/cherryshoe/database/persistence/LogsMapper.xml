@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cherryshoe.database.persistence.LogsMapper">
+
+  <cache />
+  
+  <resultMap id="baseResultMap" type="com.cherryshoe.database.domain.Logs">
+  	  <id column="logs_id" property="logsId" />
+  	  <result column="from_sender" property="fromSender" />
+  	  <result column="subject" property="subject" />
+  	  <result column="sent_date" property="sentDate" />
+  </resultMap>
+  
+  <sql id="base_column_list">
+    logs_id, from_sender, subject, sent_date
+  </sql>
+
+  <select id="getLogsById" parameterType="Long" resultMap="baseResultMap">
+    SELECT
+          <include refid="base_column_list" />
+    FROM Logs
+    WHERE logs_id = #{logsId}
+  </select>
+  
+  <select id="getLogsBySentDateRange" parameterType="map" resultMap="baseResultMap">
+    SELECT
+          <include refid="base_column_list" />
+    FROM Logs
+    WHERE sent_date BETWEEN TO_TIMESTAMP(#{fromTimestamp}, 'DD/MM/YYYY HH24:MI:SS') 
+    AND TO_TIMESTAMP(#{toTimestamp}, 'DD/MM/YYYY HH24:MI:SS')
+  </select>
+  
+  <!--  
+  TODO MyBatis 3 does not map booleans to integers
+  -->
+
+</mapper>
