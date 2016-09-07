@@ -31,7 +31,7 @@ public class FirstTest
     	assertNotNull(searchTextBox);
 
     	// enter in a search term and see results
-    	searchTextBox.sendKeys("codified selenium");
+    	searchTextBox.sendKeys("cherryshoe selenium");
     	searchTextBox.submit();
     	Thread.sleep(5000);
     }
