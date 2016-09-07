@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cherryshoe.database.persistence.StatusMapper">
+
+  <cache />
+  
+  <resultMap id="baseResultMap" type="com.cherryshoe.database.domain.Status">
+  	  <id column="STATUS_ID" property="statusId" />
+  	  <result column="STATUS_STATUS" property="statusStatus" />
+  	  <result column="STATUS_REQUEST" property="statusRequest" />
+  	  <result column="STATUS_CREATED_DATE" property="statusCreatedDate" />
+  	  <result column="STATUS_MODIFIED_DATE" property="statusModifiedDate" />
+  </resultMap>
+  
+  <sql id="base_column_list">
+    STATUS_ID, STATUS_STATUS, STATUS_REQUEST, STATUS_CREATED_DATE, STATUS_MODIFIED_DATE
+  </sql>
+
+  <select id="getStatusById" parameterType="Long" resultMap="baseResultMap">
+    SELECT
+          <include refid="base_column_list" />
+    FROM STATUS
+    WHERE STATUS_ID = #{statusId}
+  </select>
+
+  <!-- Mapper does not allow the create date to be modified -->
+  <update id="updateStatus" parameterType="com.cherryshoe.database.domain.Status">
+    UPDATE STATUS SET
+      <if test="statusStatus != null">
+      	STATUS_STATUS = #{statusStatus},
+      </if>
+      <if test="statusRequest != null">
+      	STATUS_REQUEST = #{statusRequest},
+      </if>
+      <if test="statusModifiedDate != null">
+      	STATUS_MODIFIED_DATE = #{statusModifiedDate}
+      </if>
+    WHERE STATUS_ID = #{statusId}
+  </update>
+
+  <insert id="insertStatus" parameterType="com.cherryshoe.database.domain.Status">
+    INSERT INTO STATUS
+      ( <include refid="base_column_list" />)
+    VALUES
+      (#{statusId}, #{statusStatus}, #{statusRequest}, #{statusCreatedDate}, #{statusModifiedDate})
+  </insert>
+
+  <!--  
+  TODO MyBatis 3 does not map booleans to integers
+  -->
+
+</mapper>
